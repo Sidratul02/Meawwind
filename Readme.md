@@ -6,6 +6,8 @@
 
 **MeawWind** is a lightweight, runtime utility-class engine for the browser — no build tools, no config files, no CSS to write. Just add `chai-` classes to your HTML and styles are applied instantly.
 
+🌐 **Live Demo:** [meawwind.vercel.app](https://meawwind.vercel.app)
+
 ---
 
 ## How it works
