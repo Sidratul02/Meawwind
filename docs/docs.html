@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation — Meawwind</title>
+    <meta name="description"
+        content="Complete API reference for Meawwind — the runtime utility-class styling engine for the browser.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg: #08080f;
+            --surface: #0f0f1a;
+            --surface-2: #16162a;
+            --surface-3: #1c1c30;
+            --border: rgba(139, 92, 246, 0.15);
+            --border-h: rgba(167, 139, 250, 0.3);
+            --text: #f0eeff;
+            --muted: #9490b8;
+            --subtle: #4e4a6e;
+            --accent: #a78bfa;
+            --accent-2: #7c3aed;
+            --blue: #a78bfa;
+            --green: #a78bfa;
+            --purple: #a78bfa;
+            --sidebar: 240px;
+            --nav: 60px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: var(--nav);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            background: rgba(8, 8, 15, 0.88);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border)
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            font-family: 'Syne', sans-serif;
+            color: var(--text)
+        }
+
+        .nav-brand img {
+            width: 20px;
+            height: 20px
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 22px;
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .nav-links a {
+            transition: color .15s
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent)
+        }
+
+
+        .layout {
+            display: flex;
+            max-width: 1220px;
+            margin: 0 auto;
+            padding: 0 28px
+        }
+
+
+        .sidebar {
+            width: var(--sidebar);
+            flex-shrink: 0;
+            position: sticky;
+            top: var(--nav);
+            height: calc(100vh - var(--nav));
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+            padding: 32px 24px 80px 0
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 4px
+        }
+
+        .s-group {
+            margin-bottom: 28px
+        }
+
+        .s-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--accent);
+            opacity: 0.6;
+            margin-bottom: 10px;
+            font-family: 'JetBrains Mono', monospace
+        }
+
+        .s-links {
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .s-links a {
+            font-size: 13px;
+            color: var(--muted);
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: color .15s, background .15s
+        }
+
+        .s-links a:hover {
+            color: var(--accent);
+            background: rgba(124, 58, 237, .08)
+        }
+
+        .s-links a.active {
+            color: var(--accent);
+            background: rgba(124, 58, 237, .12)
+        }
+
+
+        .content {
+            flex: 1;
+            min-width: 0;
+            padding: 52px 0 120px 56px;
+            max-width: 820px
+        }
+
+
+        .prose h1 {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -.04em;
+            margin-bottom: 12px;
+            line-height: 1.1;
+            font-family: 'Syne', sans-serif
+        }
+
+        .prose .lead {
+            font-size: 16px;
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 40px;
+            max-width: 580px
+        }
+
+        .prose h2 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -.02em;
+            margin: 60px 0 18px;
+            padding-top: 60px;
+            border-top: 1px solid var(--border);
+            color: var(--text);
+            font-family: 'Syne', sans-serif
+        }
+
+        .prose h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin: 32px 0 12px;
+            color: var(--text);
+            font-family: 'Syne', sans-serif
+        }
+
+        .prose p {
+            font-size: 14.5px;
+            color: var(--muted);
+            line-height: 1.75;
+            margin-bottom: 18px
+        }
+
+        .prose ul {
+            margin: 0 0 20px 18px;
+            color: var(--muted);
+            font-size: 14.5px;
+            line-height: 1.75
+        }
+
+        .prose li {
+            margin-bottom: 6px
+        }
+
+        .prose a {
+            color: var(--accent);
+            text-underline-offset: 3px;
+            text-decoration: underline;
+            text-decoration-color: rgba(167, 139, 250, .3);
+            transition: text-decoration-color .15s
+        }
+
+        .prose a:hover {
+            text-decoration-color: var(--accent)
+        }
+
+        code:not(pre code) {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 5px;
+            border: 1px solid rgba(167, 139, 250, 0.2)
+        }
+
+        pre[class*="language-"],
+        pre {
+            background: #0d0d0d !important;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0 !important;
+            overflow: hidden;
+            margin: 20px 0;
+            font-size: 0;
+        }
+
+        pre[class*="language-"] code[class*="language-"],
+        pre code {
+            display: block;
+            padding: 20px 22px !important;
+            font-family: 'JetBrains Mono', monospace !important;
+            font-size: 13px !important;
+            line-height: 1.65 !important;
+            overflow-x: auto;
+            background: none !important;
+            border: none !important;
+            text-shadow: none !important;
+        }
+
+        .token.keyword,
+        .token.builtin {
+            color: #a78bfa
+        }
+
+        .token.string,
+        .token.attr-value {
+            color: #86efac
+        }
+
+        .token.number {
+            color: #fbbf24
+        }
+
+        .token.function {
+            color: #60a5fa
+        }
+
+        .token.comment {
+            color: #555;
+            font-style: italic
+        }
+
+        .token.tag,
+        .token.selector {
+            color: #7dd3fc
+        }
+
+        .token.attr-name {
+            color: #a5b4fc
+        }
+
+        .token.punctuation {
+            color: #555
+        }
+
+        .token.operator {
+            color: #fb923c
+        }
+
+        .token.property {
+            color: #e2e8f0
+        }
+
+        .token.class-name {
+            color: #fcd34d
+        }
+
+
+        .code-block {
+            position: relative;
+            margin: 20px 0
+        }
+
+        .code-block-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-bottom: 1px solid rgba(139, 92, 246, .08);
+            border-radius: 10px 10px 0 0;
+            padding: 8px 14px
+        }
+
+        .code-block-header+pre,
+        .code-block-header+pre[class*="language-"] {
+            margin: 0;
+            border-top: none;
+            border-radius: 0 0 10px 10px
+        }
+
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--subtle);
+            text-transform: uppercase;
+            letter-spacing: .06em
+        }
+
+        .code-copy {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+            background: rgba(124, 58, 237, .06);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 3px 9px;
+            cursor: pointer;
+            transition: color .15s, border-color .15s
+        }
+
+        .code-copy:hover {
+            color: var(--accent);
+            border-color: var(--border-h)
+        }
+
+        .code-copy.copied {
+            color: var(--accent);
+            border-color: rgba(167, 139, 250, .3)
+        }
+
+
+        .callout {
+            background: rgba(124, 58, 237, .06);
+            border-left: 3px solid var(--accent);
+            padding: 14px 18px;
+            border-radius: 0 8px 8px 0;
+            margin: 28px 0;
+            font-size: 13.5px;
+            color: var(--muted);
+            line-height: 1.65
+        }
+
+        .callout strong {
+            display: block;
+            color: var(--accent);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            margin-bottom: 6px;
+            font-family: 'JetBrains Mono', monospace
+        }
+
+        .callout.green {
+            background: rgba(124, 58, 237, .08);
+            border-color: var(--accent)
+        }
+
+        .callout.green strong {
+            color: var(--accent)
+        }
+
+
+        .badge {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            background: rgba(124, 58, 237, .1);
+            color: var(--accent);
+            border: 1px solid rgba(167, 139, 250, .2);
+            border-radius: 999px;
+            padding: 2px 10px;
+            margin-left: 8px;
+            vertical-align: middle
+        }
+
+        .badge.green {
+            background: rgba(124, 58, 237, .1);
+            color: var(--accent);
+            border-color: rgba(167, 139, 250, .2)
+        }
+
+
+        .table-wrap {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0 32px
+        }
+
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px
+        }
+
+        .api-table th {
+            text-align: left;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: var(--subtle);
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            font-family: 'JetBrains Mono', monospace
+        }
+
+        .api-table td {
+            padding: 9px 14px;
+            border-bottom: 1px solid rgba(139, 92, 246, .06);
+            color: var(--muted);
+            vertical-align: top
+        }
+
+        .api-table td:first-child {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--accent);
+            white-space: nowrap
+        }
+
+        .api-table tr:last-child td {
+            border-bottom: none
+        }
+
+        .api-table tr:hover td {
+            background: rgba(124, 58, 237, .04)
+        }
+
+        .prose h2:first-of-type {
+            border-top: none;
+            padding-top: 0;
+            margin-top: 0
+        }
+
+        @media(max-width:860px) {
+            .sidebar {
+                display: none
+            }
+
+            .content {
+                padding: 40px 0 80px
+            }
+
+            .layout {
+                padding: 0 20px
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="nav">
+        <a href="index.html" class="nav-brand">
+            <img src="./assets/meaw01.png" alt="Meawwind">
+            meawwind
+        </a>
+        <div class="nav-links">
+            <a href="https://www.npmjs.com/package/meawwind" target="_blank">npm</a>
+            <a href="https://github.com/Sidratul02/meawwind" target="_blank">GitHub</a>
+            <a href="showcase.html">Showcase</a>
+            <a href="docs.html" class="active">Docs</a>
+        </div>
+    </nav>
+
+    <div class="layout">
+
+        <aside class="sidebar">
+            <div class="s-group">
+                <p class="s-label">Getting Started</p>
+                <div class="s-links">
+                    <a href="#introduction">Introduction</a>
+                    <a href="#installation">Installation</a>
+                    <a href="#how-it-works">How it works</a>
+                </div>
+            </div>
+            <div class="s-group">
+                <p class="s-label">Core Concepts</p>
+                <div class="s-links">
+                    <a href="#class-syntax">Class Syntax</a>
+                    <a href="#arbitrary-values">Arbitrary Values</a>
+                    <a href="#hover-states">Hover States</a>
+                    <a href="#focus-states">Focus States</a>
+                    <a href="#dynamic-dom">Dynamic DOM</a>
+                </div>
+            </div>
+            <div class="s-group">
+                <p class="s-label">Reference</p>
+                <div class="s-links">
+                    <a href="#colors">Colors</a>
+                    <a href="#spacing">Spacing &amp; Sizing</a>
+                    <a href="#typography">Typography</a>
+                    <a href="#layout">Layout &amp; Flex</a>
+                    <a href="#borders">Borders &amp; Radius</a>
+                    <a href="#shadows">Shadows</a>
+                    <a href="#positioning">Positioning</a>
+                    <a href="#display">Display</a>
+                    <a href="#opacity">Opacity &amp; Z-Index</a>
+                    <a href="#cursor">Cursor</a>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content prose">
+
+            <h1 id="introduction">Documentation <span class="badge green">v1.2.0</span></h1>
+            <p class="lead"><strong>Meawwind</strong> is a zero-configuration, runtime utility-class engine for the
+                browser. Write <code>chai-*</code> classes directly in HTML and styles are applied instantly — no build
+                step, no CSS files, no config.</p>
+
+            <div class="callout green">
+                <strong>Zero build step</strong>
+                Unlike Tailwind or UnoCSS, Meawwind runs entirely in the browser. Import one JS module and every
+                <code>chai-</code> class on the page is resolved and injected into a live <code>&lt;style&gt;</code>
+                tag. New DOM nodes are handled automatically via <code>MutationObserver</code>.
+            </div>
+
+
+            <h2 id="installation">Installation</h2>
+            <h3>Via npm</h3>
+            <p>Install the package into your project:</p>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">bash</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-bash">npm install meawwind</code></pre>
+            </div>
+            <p>Then import once in your JavaScript entry point or directly in your HTML file:</p>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">html</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-html">&lt;script type="module"&gt;
+  import "meawwind";
+&lt;/script&gt;</code></pre>
+            </div>
+            <p>Or using an explicit path when developing locally:</p>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">html</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-html">&lt;script type="module"&gt;
+  import "./node_modules/meawwind/dist/index.js";
+&lt;/script&gt;</code></pre>
+            </div>
+
+            <h3>Optional explicit init</h3>
+            <p>Meawwind auto-initialises on <code>DOMContentLoaded</code>. If you need to trigger it manually, use the
+                named export:</p>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">javascript</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-javascript">import { initMeawWind } from "meawwind";
+
+initMeawWind();</code></pre>
+            </div>
+
+            <h3>Module formats</h3>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Format</th>
+                            <th>File</th>
+                            <th>Usage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ESM</td>
+                            <td><code>dist/index.js</code></td>
+                            <td><code>import "meawwind"</code></td>
+                        </tr>
+                        <tr>
+                            <td>CJS</td>
+                            <td><code>dist/index.cjs</code></td>
+                            <td><code>require("meawwind")</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 id="how-it-works">How it works</h2>
+            <p>On initialisation, Meawwind performs two passes:</p>
+            <ul>
+                <li><strong>Initial scan</strong> — queries <code>[class*="chai-"]</code> on the entire document and
+                    resolves every matched utility class into inline styles.</li>
+                <li><strong>MutationObserver</strong> — attaches a watcher to <code>document.body</code> listening for
+                    <code>childList</code> and <code>class</code> attribute mutations. New nodes and class changes are
+                    batched inside a <code>requestAnimationFrame</code> callback for optimal performance.</li>
+            </ul>
+            <p>Hover and focus states are injected as real CSS rules into dedicated <code>&lt;style&gt;</code> tags in
+                <code>&lt;head&gt;</code>, keyed by an escaped class name, so they are only written once per unique
+                class string.</p>
+
+            <div class="callout">
+                <strong>Performance note</strong>
+                Style mutations are deduplicated and batched per animation frame. Adding or swapping many classes at
+                once results in a single DOM write cycle, not one per class.
+            </div>
+
+            <h2 id="class-syntax">Class Syntax</h2>
+            <p>Every Brewwind utility follows the pattern:</p>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">text</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-text">chai-{property}-{value}</code></pre>
+            </div>
+            <p>The <code>chai-</code> prefix is required. Examples:</p>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>CSS output</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>chai-bg-blue-500</td>
+                            <td>background-color: #3b82f6</td>
+                        </tr>
+                        <tr>
+                            <td>chai-text-gray-400</td>
+                            <td>color: #9ca3af</td>
+                        </tr>
+                        <tr>
+                            <td>chai-p-4</td>
+                            <td>padding: 16px</td>
+                        </tr>
+                        <tr>
+                            <td>chai-rounded-xl</td>
+                            <td>border-radius: 0.75rem</td>
+                        </tr>
+                        <tr>
+                            <td>chai-flex</td>
+                            <td>display: flex</td>
+                        </tr>
+                        <tr>
+                            <td>chai-items-center</td>
+                            <td>align-items: center</td>
+                        </tr>
+                        <tr>
+                            <td>chai-font-semibold</td>
+                            <td>font-weight: 600</td>
+                        </tr>
+                        <tr>
+                            <td>chai-shadow-lg</td>
+                            <td>box-shadow: 0 10px 15px …</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 id="arbitrary-values">Arbitrary Values</h2>
+            <p>Pass any custom CSS value using bracket notation:</p>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">html</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-html">&lt;!-- Custom hex color --&gt;
+&lt;div class="chai-bg-[#161616]"&gt;&lt;/div&gt;
+
+&lt;!-- RGBA border --&gt;
+&lt;div class="chai-border-[rgba(255,255,255,0.12)]"&gt;&lt;/div&gt;
+
+&lt;!-- Exact pixel width --&gt;
+&lt;div class="chai-w-[350px]"&gt;&lt;/div&gt;
+
+&lt;!-- Custom box shadow (use _ for spaces) --&gt;
+&lt;div class="chai-shadow-[0_4px_24px_rgba(0,0,0,0.4)]"&gt;&lt;/div&gt;</code></pre>
+            </div>
+            <div class="callout">
+                <strong>Underscore escaping</strong>
+                Use underscores <code>_</code> in place of spaces inside bracket notation. Meawwind replaces them with
+                spaces before applying the value.
+            </div>
+            <p>Arbitrary values work for: <code>chai-bg-[…]</code>, <code>chai-text-[…]</code>,
+                <code>chai-border-[…]</code>, <code>chai-w-[…]</code>, <code>chai-h-[…]</code>,
+                <code>chai-shadow-[…]</code>, <code>chai-cursor-[…]</code>, <code>chai-opacity-[…]</code>,
+                <code>chai-z-[…]</code>.</p>
+
+            <h2 id="hover-states">Hover States</h2>
+            <p>Prefix any valid class with <code>hover:</code> to apply it only on mouse hover:</p>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">html</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-html">&lt;button class="chai-bg-white hover:chai-bg-gray-100"&gt;
+  Click me
+&lt;/button&gt;
+
+&lt;a class="chai-text-gray-500 hover:chai-text-white hover:chai-bg-gray-800
+           chai-px-3 chai-py-1 chai-rounded-md"&gt;
+  Link
+&lt;/a&gt;</code></pre>
+            </div>
+            <p>Brewwind attaches <code>mouseenter</code> / <code>mouseleave</code> listeners that snapshot and restore
+                the element's base styles, so CSS transitions work as expected.</p>
+
+            <h2 id="focus-states">Focus States</h2>
+            <p>Use the <code>focus:</code> prefix for keyboard-accessible focus styles. A real CSS <code>:focus</code>
+                rule is injected into <code>&lt;head&gt;</code>:</p>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">html</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-html">&lt;input class="chai-border chai-border-gray-700
+              focus:chai-border-blue-500 chai-rounded-md chai-p-2"&gt;</code></pre>
+            </div>
+
+            <h2 id="dynamic-dom">Dynamic DOM Support</h2>
+            <p>Any element added after page load is styled automatically:</p>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">javascript</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-javascript">const card = document.createElement("div");
+card.className = "chai-bg-[#1a1a1a] chai-p-4 chai-rounded-xl chai-border chai-border-gray-800";
+document.body.appendChild(card); // styled immediately</code></pre>
+            </div>
+            <p>Class changes on existing elements are also tracked. Removing a <code>chai-</code> class reverts the
+                affected CSS property via group-based recomputation.</p>
+
+            <h2 id="colors">Colors</h2>
+            <p>Meawwind ships a full Tailwind-compatible color palette. Use colors for <strong>background</strong>
+                (<code>chai-bg-{color}-{shade}</code>), <strong>text</strong> (<code>chai-text-{color}-{shade}</code>),
+                and <strong>border</strong> (<code>chai-border-{color}-{shade}</code>).</p>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Color family</th>
+                            <th>Available shades</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>gray</td>
+                            <td>50 · 100 · 200 · 300 · 400 · 500 · 600 · 700 · 800 · 900</td>
+                            <td><code>chai-bg-gray-800</code></td>
+                        </tr>
+                        <tr>
+                            <td>red</td>
+                            <td>50 – 900</td>
+                            <td><code>chai-text-red-500</code></td>
+                        </tr>
+                        <tr>
+                            <td>green</td>
+                            <td>50 – 900</td>
+                            <td><code>chai-bg-green-400</code></td>
+                        </tr>
+                        <tr>
+                            <td>blue</td>
+                            <td>50 – 900</td>
+                            <td><code>chai-border-blue-600</code></td>
+                        </tr>
+                        <tr>
+                            <td>yellow</td>
+                            <td>50 – 900</td>
+                            <td><code>chai-bg-yellow-300</code></td>
+                        </tr>
+                        <tr>
+                            <td>orange</td>
+                            <td>50 – 900</td>
+                            <td><code>chai-text-orange-400</code></td>
+                        </tr>
+                        <tr>
+                            <td>purple</td>
+                            <td>50 – 900</td>
+                            <td><code>chai-bg-purple-700</code></td>
+                        </tr>
+                        <tr>
+                            <td>pink</td>
+                            <td>50 – 900</td>
+                            <td><code>chai-text-pink-500</code></td>
+                        </tr>
+                        <tr>
+                            <td>sky</td>
+                            <td>50 – 900</td>
+                            <td><code>chai-bg-sky-400</code></td>
+                        </tr>
+                        <tr>
+                            <td>cyan</td>
+                            <td>50 – 900</td>
+                            <td><code>chai-text-cyan-300</code></td>
+                        </tr>
+                        <tr>
+                            <td>indigo</td>
+                            <td>50 – 900</td>
+                            <td><code>chai-bg-indigo-600</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">html</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-html">&lt;!-- Named --&gt;
+&lt;p class="chai-text-white"&gt;White text&lt;/p&gt;
+&lt;div class="chai-bg-black chai-text-white"&gt;Black bg&lt;/div&gt;
+
+&lt;!-- Arbitrary --&gt;
+&lt;div class="chai-bg-[#5b8dee] chai-text-[rgba(255,255,255,0.8)]"&gt;&lt;/div&gt;</code></pre>
+            </div>
+
+            <h2 id="spacing">Spacing &amp; Sizing</h2>
+            <p>Meawwind uses a <strong>4px base unit</strong>: <code>1 = 4px</code>, <code>4 = 16px</code>,
+                <code>8 = 32px</code>.</p>
+
+            <h3>Padding</h3>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>CSS property</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>chai-p-{n}</td>
+                            <td>padding (all sides)</td>
+                        </tr>
+                        <tr>
+                            <td>chai-px-{n}</td>
+                            <td>padding-left + padding-right</td>
+                        </tr>
+                        <tr>
+                            <td>chai-py-{n}</td>
+                            <td>padding-top + padding-bottom</td>
+                        </tr>
+                        <tr>
+                            <td>chai-pt-{n}</td>
+                            <td>padding-top</td>
+                        </tr>
+                        <tr>
+                            <td>chai-pr-{n}</td>
+                            <td>padding-right</td>
+                        </tr>
+                        <tr>
+                            <td>chai-pb-{n}</td>
+                            <td>padding-bottom</td>
+                        </tr>
+                        <tr>
+                            <td>chai-pl-{n}</td>
+                            <td>padding-left</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Margin</h3>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>CSS property</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>chai-m-{n}</td>
+                            <td>margin (all sides)</td>
+                        </tr>
+                        <tr>
+                            <td>chai-mx-{n}</td>
+                            <td>margin-left + margin-right</td>
+                        </tr>
+                        <tr>
+                            <td>chai-my-{n}</td>
+                            <td>margin-top + margin-bottom</td>
+                        </tr>
+                        <tr>
+                            <td>chai-mt-{n}</td>
+                            <td>margin-top</td>
+                        </tr>
+                        <tr>
+                            <td>chai-mr-{n}</td>
+                            <td>margin-right</td>
+                        </tr>
+                        <tr>
+                            <td>chai-mb-{n}</td>
+                            <td>margin-bottom</td>
+                        </tr>
+                        <tr>
+                            <td>chai-ml-{n}</td>
+                            <td>margin-left</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Spacing scale</h3>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Token</th>
+                            <th>Value</th>
+                            <th>Token</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td>0px</td>
+                            <td>8</td>
+                            <td>32px</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>4px</td>
+                            <td>9</td>
+                            <td>36px</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>8px</td>
+                            <td>10</td>
+                            <td>40px</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>12px</td>
+                            <td>12</td>
+                            <td>48px</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>16px</td>
+                            <td>sm</td>
+                            <td>8px</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>20px</td>
+                            <td>md</td>
+                            <td>16px</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>24px</td>
+                            <td>lg</td>
+                            <td>24px</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>28px</td>
+                            <td>xl</td>
+                            <td>32px</td>
+                        </tr>
+                        <tr>
+                            <td>2xl</td>
+                            <td>48px</td>
+                            <td>3xl</td>
+                            <td>64px</td>
+                        </tr>
+                        <tr>
+                            <td>4xl</td>
+                            <td>96px</td>
+                            <td>5xl</td>
+                            <td>128px</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Gap</h3>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>CSS property</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>chai-gap-{n}</td>
+                            <td>gap</td>
+                        </tr>
+                        <tr>
+                            <td>chai-gap-x-{n}</td>
+                            <td>column-gap</td>
+                        </tr>
+                        <tr>
+                            <td>chai-gap-y-{n}</td>
+                            <td>row-gap</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Width &amp; Height</h3>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>chai-w-{n} / chai-h-{n}</td>
+                            <td>n × 4px (e.g. chai-w-12 → 48px)</td>
+                        </tr>
+                        <tr>
+                            <td>chai-w-full / chai-h-full</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td>chai-w-screen / chai-h-screen</td>
+                            <td>100vw / 100vh</td>
+                        </tr>
+                        <tr>
+                            <td>chai-w-auto / chai-h-auto</td>
+                            <td>auto</td>
+                        </tr>
+                        <tr>
+                            <td>chai-w-min / chai-h-min</td>
+                            <td>min-content</td>
+                        </tr>
+                        <tr>
+                            <td>chai-w-max / chai-h-max</td>
+                            <td>max-content</td>
+                        </tr>
+                        <tr>
+                            <td>chai-w-fit / chai-h-fit</td>
+                            <td>fit-content</td>
+                        </tr>
+                        <tr>
+                            <td>chai-w-1/2 … chai-w-3/4</td>
+                            <td>50% … 75%</td>
+                        </tr>
+                        <tr>
+                            <td>chai-w-[350px]</td>
+                            <td>arbitrary value</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 id="typography">Typography</h2>
+            <h3>Font size — chai-text-{size} or chai-font-{size}</h3>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Token</th>
+                            <th>Value</th>
+                            <th>Token</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>xs</td>
+                            <td>0.75rem (12px)</td>
+                            <td>5xl</td>
+                            <td>3rem (48px)</td>
+                        </tr>
+                        <tr>
+                            <td>sm</td>
+                            <td>0.875rem (14px)</td>
+                            <td>6xl</td>
+                            <td>3.75rem (60px)</td>
+                        </tr>
+                        <tr>
+                            <td>base</td>
+                            <td>1rem (16px)</td>
+                            <td>7xl</td>
+                            <td>4.5rem (72px)</td>
+                        </tr>
+                        <tr>
+                            <td>lg</td>
+                            <td>1.125rem (18px)</td>
+                            <td>8xl</td>
+                            <td>6rem (96px)</td>
+                        </tr>
+                        <tr>
+                            <td>xl</td>
+                            <td>1.25rem (20px)</td>
+                            <td>9xl</td>
+                            <td>8rem (128px)</td>
+                        </tr>
+                        <tr>
+                            <td>2xl</td>
+                            <td>1.5rem (24px)</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>3xl</td>
+                            <td>1.875rem (30px)</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>4xl</td>
+                            <td>2.25rem (36px)</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Font weight — chai-font-{weight}</h3>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>font-weight</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>chai-font-thin</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <td>chai-font-extralight</td>
+                            <td>200</td>
+                        </tr>
+                        <tr>
+                            <td>chai-font-light</td>
+                            <td>300</td>
+                        </tr>
+                        <tr>
+                            <td>chai-font-normal</td>
+                            <td>400</td>
+                        </tr>
+                        <tr>
+                            <td>chai-font-medium</td>
+                            <td>500</td>
+                        </tr>
+                        <tr>
+                            <td>chai-font-semibold</td>
+                            <td>600</td>
+                        </tr>
+                        <tr>
+                            <td>chai-font-bold</td>
+                            <td>700</td>
+                        </tr>
+                        <tr>
+                            <td>chai-font-extrabold</td>
+                            <td>800</td>
+                        </tr>
+                        <tr>
+                            <td>chai-font-black</td>
+                            <td>900</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Text alignment</h3>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">text</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-text">chai-text-left  |  chai-text-center  |  chai-text-right  |  chai-text-justify</code></pre>
+            </div>
+
+            <h2 id="layout">Layout &amp; Flexbox</h2>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>CSS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>chai-flex</td>
+                            <td>display: flex</td>
+                        </tr>
+                        <tr>
+                            <td>chai-inline-flex</td>
+                            <td>display: inline-flex</td>
+                        </tr>
+                        <tr>
+                            <td>chai-flex-row</td>
+                            <td>flex-direction: row</td>
+                        </tr>
+                        <tr>
+                            <td>chai-flex-row-reverse</td>
+                            <td>flex-direction: row-reverse</td>
+                        </tr>
+                        <tr>
+                            <td>chai-flex-col</td>
+                            <td>flex-direction: column</td>
+                        </tr>
+                        <tr>
+                            <td>chai-flex-col-reverse</td>
+                            <td>flex-direction: column-reverse</td>
+                        </tr>
+                        <tr>
+                            <td>chai-items-start</td>
+                            <td>align-items: flex-start</td>
+                        </tr>
+                        <tr>
+                            <td>chai-items-center</td>
+                            <td>align-items: center</td>
+                        </tr>
+                        <tr>
+                            <td>chai-items-end</td>
+                            <td>align-items: flex-end</td>
+                        </tr>
+                        <tr>
+                            <td>chai-items-stretch</td>
+                            <td>align-items: stretch</td>
+                        </tr>
+                        <tr>
+                            <td>chai-justify-start</td>
+                            <td>justify-content: flex-start</td>
+                        </tr>
+                        <tr>
+                            <td>chai-justify-center</td>
+                            <td>justify-content: center</td>
+                        </tr>
+                        <tr>
+                            <td>chai-justify-end</td>
+                            <td>justify-content: flex-end</td>
+                        </tr>
+                        <tr>
+                            <td>chai-justify-between</td>
+                            <td>justify-content: space-between</td>
+                        </tr>
+                        <tr>
+                            <td>chai-justify-around</td>
+                            <td>justify-content: space-around</td>
+                        </tr>
+                        <tr>
+                            <td>chai-justify-evenly</td>
+                            <td>justify-content: space-evenly</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 id="borders">Borders &amp; Radius</h2>
+            <h3>Border width</h3>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>Sides</th>
+                            <th>Width tokens</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>chai-b-{n}</td>
+                            <td>all</td>
+                            <td rowspan="7" style="vertical-align:middle;color:#a1a1aa">none/0=0 &nbsp;|&nbsp; 1/sm=1px
+                                &nbsp;|&nbsp; 2/md=2px &nbsp;|&nbsp; 4/lg=4px &nbsp;|&nbsp; 8/xl=8px</td>
+                        </tr>
+                        <tr>
+                            <td>chai-bt-{n}</td>
+                            <td>top</td>
+                        </tr>
+                        <tr>
+                            <td>chai-br-{n}</td>
+                            <td>right</td>
+                        </tr>
+                        <tr>
+                            <td>chai-bb-{n}</td>
+                            <td>bottom</td>
+                        </tr>
+                        <tr>
+                            <td>chai-bl-{n}</td>
+                            <td>left</td>
+                        </tr>
+                        <tr>
+                            <td>chai-bx-{n}</td>
+                            <td>left + right</td>
+                        </tr>
+                        <tr>
+                            <td>chai-by-{n}</td>
+                            <td>top + bottom</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Border color</h3>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">html</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-html">&lt;div class="chai-border chai-border-gray-700"&gt;Named color&lt;/div&gt;
+&lt;div class="chai-border chai-border-[rgba(255,255,255,0.12)]"&gt;Arbitrary&lt;/div&gt;</code></pre>
+            </div>
+
+            <h3>Border radius</h3>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>border-radius</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>chai-rounded-none</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>chai-rounded-sm</td>
+                            <td>0.125rem</td>
+                        </tr>
+                        <tr>
+                            <td>chai-rounded-md</td>
+                            <td>0.375rem</td>
+                        </tr>
+                        <tr>
+                            <td>chai-rounded-lg</td>
+                            <td>0.5rem</td>
+                        </tr>
+                        <tr>
+                            <td>chai-rounded-xl</td>
+                            <td>0.75rem</td>
+                        </tr>
+                        <tr>
+                            <td>chai-rounded-2xl</td>
+                            <td>1rem</td>
+                        </tr>
+                        <tr>
+                            <td>chai-rounded-3xl</td>
+                            <td>1.5rem</td>
+                        </tr>
+                        <tr>
+                            <td>chai-rounded-full</td>
+                            <td>9999px</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Directional radius: <code>chai-rounded-t-{size}</code> (top), <code>chai-rounded-b-{size}</code>
+                (bottom), <code>chai-rounded-l-{size}</code> (left), <code>chai-rounded-r-{size}</code> (right).</p>
+
+            <h2 id="shadows">Shadows</h2>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>box-shadow</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>chai-shadow-sm</td>
+                            <td>0 1px 2px rgba(0,0,0,0.05)</td>
+                        </tr>
+                        <tr>
+                            <td>chai-shadow / chai-shadow-base</td>
+                            <td>0 1px 3px rgba(0,0,0,0.1) …</td>
+                        </tr>
+                        <tr>
+                            <td>chai-shadow-md</td>
+                            <td>0 4px 6px -1px rgba(0,0,0,0.1) …</td>
+                        </tr>
+                        <tr>
+                            <td>chai-shadow-lg</td>
+                            <td>0 10px 15px -3px rgba(0,0,0,0.1) …</td>
+                        </tr>
+                        <tr>
+                            <td>chai-shadow-xl</td>
+                            <td>0 20px 25px -5px rgba(0,0,0,0.1) …</td>
+                        </tr>
+                        <tr>
+                            <td>chai-shadow-2xl</td>
+                            <td>0 25px 50px -12px rgba(0,0,0,0.25)</td>
+                        </tr>
+                        <tr>
+                            <td>chai-shadow-inner</td>
+                            <td>inset 0 2px 4px rgba(0,0,0,0.06)</td>
+                        </tr>
+                        <tr>
+                            <td>chai-shadow-none</td>
+                            <td>none</td>
+                        </tr>
+                        <tr>
+                            <td>chai-shadow-[…]</td>
+                            <td>arbitrary (use _ for spaces)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 id="positioning">Positioning</h2>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">text</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-text">chai-static  |  chai-relative  |  chai-absolute  |  chai-fixed  |  chai-sticky</code></pre>
+            </div>
+            <p>Inset offsets: <code>chai-top-{n}</code>, <code>chai-right-{n}</code>, <code>chai-bottom-{n}</code>,
+                <code>chai-left-{n}</code>. Value scale: n × 4px, plus <code>auto</code>, <code>full</code>, and
+                fractions (<code>1/2</code>, <code>1/3</code> … <code>3/4</code>).</p>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">html</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-html">&lt;div class="chai-absolute chai-top-4 chai-right-4"&gt;&lt;/div&gt;
+&lt;div class="chai-sticky chai-top-0"&gt;&lt;/div&gt;
+&lt;div class="chai-absolute chai-bottom-[24px] chai-left-1/2"&gt;&lt;/div&gt;</code></pre>
+            </div>
+
+            <h2 id="display">Display</h2>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>display</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>chai-block</td>
+                            <td>block</td>
+                        </tr>
+                        <tr>
+                            <td>chai-inline-block</td>
+                            <td>inline-block</td>
+                        </tr>
+                        <tr>
+                            <td>chai-inline</td>
+                            <td>inline</td>
+                        </tr>
+                        <tr>
+                            <td>chai-flex</td>
+                            <td>flex</td>
+                        </tr>
+                        <tr>
+                            <td>chai-inline-flex</td>
+                            <td>inline-flex</td>
+                        </tr>
+                        <tr>
+                            <td>chai-hidden</td>
+                            <td>none</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 id="opacity">Opacity &amp; Z-Index</h2>
+            <h3>Opacity — chai-opacity-{n}</h3>
+            <div class="table-wrap">
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Token</th>
+                            <th>opacity</th>
+                            <th>Token</th>
+                            <th>opacity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>60</td>
+                            <td>0.6</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>0.05</td>
+                            <td>70</td>
+                            <td>0.7</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>0.1</td>
+                            <td>75</td>
+                            <td>0.75</td>
+                        </tr>
+                        <tr>
+                            <td>20</td>
+                            <td>0.2</td>
+                            <td>80</td>
+                            <td>0.8</td>
+                        </tr>
+                        <tr>
+                            <td>25</td>
+                            <td>0.25</td>
+                            <td>90</td>
+                            <td>0.9</td>
+                        </tr>
+                        <tr>
+                            <td>30</td>
+                            <td>0.3</td>
+                            <td>95</td>
+                            <td>0.95</td>
+                        </tr>
+                        <tr>
+                            <td>40</td>
+                            <td>0.4</td>
+                            <td>100</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>50</td>
+                            <td>0.5</td>
+                            <td>[…]</td>
+                            <td>arbitrary</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3>Z-Index — chai-z-{n}</h3>
+            <p>Tokens: <code>0</code>, <code>10</code>, <code>20</code>, <code>30</code>, <code>40</code>,
+                <code>50</code>, <code>auto</code>, or arbitrary <code>chai-z-[999]</code>.</p>
+
+            <h2 id="cursor">Cursor</h2>
+            <div class="code-block">
+                <div class="code-block-header"><span class="code-lang">text</span><button class="code-copy"
+                        onclick="copyBlock(this)">Copy</button></div>
+                <pre><code class="language-text">chai-cursor-auto       chai-cursor-default     chai-cursor-pointer
+chai-cursor-wait       chai-cursor-text        chai-cursor-move
+chai-cursor-help       chai-cursor-not-allowed chai-cursor-none
+chai-cursor-grab       chai-cursor-grabbing    chai-cursor-zoom-in
+chai-cursor-zoom-out   chai-cursor-copy        chai-cursor-crosshair
+chai-cursor-n-resize   chai-cursor-ew-resize   chai-cursor-nwse-resize
+chai-cursor-[url(cursor.png)]   &lt;-- arbitrary</code></pre>
+            </div>
+
+            <p
+                style="margin-top:72px;padding-top:32px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;color:var(--subtle);font-size:13px">
+                <img src="./assets/meaw01.png" style="width:16px;height:16px;opacity:0.4" alt="">
+                Meawwind v1.2.0 — Built for the craft.
+            </p>
+
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+
+    <script type="module">
+        import "./dist/meawwind.mjs";
+    </script>
+
+    <script>
+        function copyBlock(btn) {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+            });
+        }
+        window.copyBlock = copyBlock;
+
+        const links = document.querySelectorAll('.s-links a');
+        links.forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const id = a.getAttribute('href').slice(1);
+                const el = document.getElementById(id);
+                if (el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+                history.pushState(null, null, `#${id}`);
+                links.forEach(l => l.classList.remove('active'));
+                a.classList.add('active');
+            });
+        });
+
+        const sections = [...document.querySelectorAll('h1[id],h2[id],h3[id]')];
+        new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const id = e.target.id;
+                    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${id}`));
+                }
+            });
+        }, { rootMargin: '-20% 0px -70% 0px' }).observe
+            ? sections.forEach(s => new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${e.target.id}`));
+                });
+            }, { rootMargin: '-20% 0px -70% 0px' }).observe(s))
+            : null;
+    </script>
+</body>
+
+</html>

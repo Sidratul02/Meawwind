@@ -1,0 +1,45 @@
+{
+  "name": "meawwind",
+  "version": "1.2.0",
+  "description": "A lightweight Tailwind-like utility engine",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.MD"
+  ],
+  "sideEffects": false,
+  "type": "module",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && node scripts/build.js",
+    "build:watch": "node scripts/build.js --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "tailwind",
+    "css",
+    "utility",
+    "framework"
+  ],
+  "author": "Sidratul Muntaha",
+  "license": "",
+  "devDependencies": {
+    "esbuild": "^0.27.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sidratul02/Meawwind.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Sidratul02/Meawwind/issues"
+  },
+  "homepage": "https://github.com/Sidratul02/Meawwind#readme"
+}

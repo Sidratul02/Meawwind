@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meawwind — Component Showcase</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600&family=Geist:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --surface: #111111;
+            --surface-2: #1a1a1a;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.16);
+            --text: #ededed;
+            --text-muted: #888;
+            --text-subtle: #555;
+            --accent: #fff;
+            --accent-blue: #5b8dee;
+            --code-bg: #0d0d0d;
+            --tag-bg: rgba(255, 255, 255, 0.06);
+            --radius-card: 12px;
+            --radius-inner: 8px;
+            --label-size: 11px;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            padding: 48px 24px 80px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .shell {
+            width: min(1100px, 100%);
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 56px;
+        }
+
+
+        .page-header {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 32px;
+        }
+
+        .page-header .eyebrow {
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-subtle);
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            color: var(--text);
+        }
+
+        .page-header p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-muted);
+            max-width: 520px;
+        }
+
+
+        .section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .section-title {
+            font-family: 'Geist Mono', monospace;
+            font-size: var(--label-size);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-subtle);
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cards-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            background: var(--border);
+        }
+
+
+        .comp-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--surface);
+            transition: background 0.15s ease;
+        }
+
+        .comp-card:first-child {
+            border-radius: calc(var(--radius-card) - 1px) calc(var(--radius-card) - 1px) 0 0;
+        }
+
+        .comp-card:last-child {
+            border-radius: 0 0 calc(var(--radius-card) - 1px) calc(var(--radius-card) - 1px);
+        }
+
+        .comp-card:only-child {
+            border-radius: calc(var(--radius-card) - 1px);
+        }
+
+        .comp-card:hover {
+            background: var(--surface-2);
+        }
+
+
+        .preview-pane {
+            padding: 32px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border-right: 1px solid var(--border);
+        }
+
+        .pane-label {
+            font-family: 'Geist Mono', monospace;
+            font-size: var(--label-size);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-subtle);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pane-label::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--text-subtle);
+        }
+
+        .comp-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            letter-spacing: -0.01em;
+        }
+
+        .preview-area {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex: 1;
+            padding: 20px;
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-inner);
+            min-height: 120px;
+        }
+
+
+        .code-pane {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: var(--code-bg);
+        }
+
+        .code-pane-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .copy-btn {
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+            background: var(--tag-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: border-color 0.15s, color 0.15s;
+        }
+
+        .copy-btn:hover {
+            border-color: var(--border-hover);
+            color: var(--text);
+        }
+
+        .copy-btn.copied {
+            color: #4ade80;
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+
+        pre,
+        pre[class*="language-"] {
+            margin: 0;
+            overflow-x: auto;
+            flex: 1;
+            background: transparent !important;
+            padding: 0 !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        code,
+        code[class*="language-"] {
+            font-family: 'Geist Mono', monospace !important;
+            font-size: 12.5px !important;
+            line-height: 1.7 !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            background: transparent !important;
+            text-shadow: none !important;
+            padding: 0 !important;
+        }
+
+
+        .token.keyword,
+        .token.builtin {
+            color: #a78bfa;
+        }
+
+        .token.string,
+        .token.attr-value {
+            color: #86efac;
+        }
+
+        .token.number {
+            color: #fbbf24;
+        }
+
+        .token.function {
+            color: #60a5fa;
+        }
+
+        .token.comment {
+            color: #555;
+            font-style: italic;
+        }
+
+        .token.tag,
+        .token.selector {
+            color: #7dd3fc;
+        }
+
+        .token.attr-name {
+            color: #a5b4fc;
+        }
+
+        .token.punctuation {
+            color: #555;
+        }
+
+        .token.operator {
+            color: #fb923c;
+        }
+
+        .token.class-name {
+            color: #fcd34d;
+        }
+
+
+        code .kw {
+            color: #888;
+        }
+
+        code .attr {
+            color: #a5b4fc;
+        }
+
+        code .val {
+            color: #86efac;
+        }
+
+        code .tag {
+            color: #7dd3fc;
+        }
+
+
+        @media (max-width: 780px) {
+            .comp-card {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-pane {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .comp-card:first-child {
+                border-radius: calc(var(--radius-card) - 1px) calc(var(--radius-card) - 1px) 0 0;
+            }
+
+            .comp-card:last-child {
+                border-radius: 0 0 calc(var(--radius-card) - 1px) calc(var(--radius-card) - 1px);
+            }
+        }
+
+
+        .preview-area button {
+            font-family: 'Geist', sans-serif;
+        }
+
+
+        .btn-showcase-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            background: var(--surface);
+        }
+
+        .btn-tabs {
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+            border-bottom: 1px solid var(--border);
+            background: var(--code-bg);
+        }
+
+        .btn-tab {
+            font-family: 'Geist', sans-serif;
+            font-size: 12.5px;
+            font-weight: 500;
+            color: var(--text-subtle);
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 12px 14px 10px;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s;
+            letter-spacing: -0.01em;
+            position: relative;
+            top: 1px;
+        }
+
+        .btn-tab:hover {
+            color: var(--text-muted);
+        }
+
+        .btn-tab.active {
+            color: var(--text);
+            border-bottom-color: var(--text);
+        }
+
+        .btn-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .btn-preview-col {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border-right: 1px solid var(--border);
+        }
+
+        .btn-preview-stage {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 24px;
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-inner);
+            min-height: 100px;
+        }
+
+        .btn-panel {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-panel.hidden {
+            display: none;
+        }
+
+        .btn-code-col {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: var(--code-bg);
+        }
+
+        .btn-code-block {
+            margin: 0;
+            overflow-x: auto;
+            flex: 1;
+        }
+
+        .btn-code-block.hidden {
+            display: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 780px) {
+            .btn-body {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-preview-col {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="shell">
+
+
+        <header class="page-header">
+            <p class="eyebrow"><a href="index.html">meawwind</a> / showcase &nbsp;·&nbsp; <a href="docs.html">docs</a>
+            </p>
+            <h1>Component Gallery</h1>
+            <p>Live previews paired with exact code snippets. Copy a class string directly into your project — no build
+                step needed.</p>
+        </header>
+
+
+        <section class="section">
+            <p class="section-title">Buttons</p>
+
+            <div class="btn-showcase-card">
+
+                <div class="btn-tabs" role="tablist">
+                    <button class="btn-tab active" role="tab" onclick="switchBtnTab(this,'primary')">Primary</button>
+                    <button class="btn-tab" role="tab" onclick="switchBtnTab(this,'secondary')">Secondary</button>
+                    <button class="btn-tab" role="tab" onclick="switchBtnTab(this,'ghost')">Ghost</button>
+                    <button class="btn-tab" role="tab" onclick="switchBtnTab(this,'danger')">Danger</button>
+                    <button class="btn-tab" role="tab" onclick="switchBtnTab(this,'outline-danger')">Outline
+                        Danger</button>
+                </div>
+
+                <div class="btn-body">
+
+                    <div class="btn-preview-col">
+                        <p class="pane-label">Preview</p>
+                        <div class="btn-preview-stage">
+
+
+                            <div class="btn-panel" id="btn-preview-primary">
+                                <button
+                                    class="chai-bg-white chai-text-gray-900 chai-px-5 chai-py-2 chai-rounded-md chai-font-sm chai-font-medium chai-cursor-pointer hover:chai-bg-gray-100">
+                                    Deploy
+                                </button>
+                            </div>
+
+
+                            <div class="btn-panel hidden" id="btn-preview-secondary">
+                                <button
+                                    class="chai-bg-[#1a1a1a] chai-text-[#ededed] chai-border chai-border-[rgba(255,255,255,0.12)] chai-px-5 chai-py-2 chai-rounded-md chai-font-sm chai-font-medium chai-cursor-pointer hover:chai-bg-gray-700">
+                                    Settings
+                                </button>
+                            </div>
+
+
+                            <div class="btn-panel hidden" id="btn-preview-ghost">
+                                <button
+                                    class="chai-text-[#888888] chai-px-5 chai-py-2 chai-rounded-md chai-font-sm chai-font-medium chai-cursor-pointer hover:chai-bg-gray-800 hover:chai-text-white">
+                                    Cancel
+                                </button>
+                            </div>
+
+
+                            <div class="btn-panel hidden" id="btn-preview-danger">
+                                <button
+                                    class="chai-bg-red-600 chai-text-white chai-px-5 chai-py-2 chai-rounded-md chai-font-sm chai-font-medium chai-cursor-pointer hover:chai-bg-red-700">
+                                    Delete
+                                </button>
+                            </div>
+
+
+                            <div class="btn-panel hidden" id="btn-preview-outline-danger">
+                                <button
+                                    class="chai-border chai-border-red-600 chai-text-red-400 chai-px-5 chai-py-2 chai-rounded-md chai-font-sm chai-font-medium chai-cursor-pointer hover:chai-bg-red-700 hover:chai-text-white">
+                                    Remove
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="btn-code-col">
+                        <div class="code-pane-top">
+                            <p class="pane-label">Code</p>
+                            <button class="copy-btn" id="btn-copy-btn" onclick="copyActiveBtnCode(this)">Copy</button>
+                        </div>
+
+                        <pre class="btn-code-block" id="btn-code-primary"><code>&lt;<span class="tag">button</span> <span class="attr">class</span>=<span class="val">"chai-bg-white chai-text-gray-900
+  chai-px-5 chai-py-2 chai-rounded-md
+  chai-font-sm chai-font-medium
+  hover:chai-bg-gray-100"</span>&gt;
+  Deploy
+&lt;/<span class="tag">button</span>&gt;</code></pre>
+
+                        <pre class="btn-code-block hidden" id="btn-code-secondary"><code>&lt;<span class="tag">button</span> <span class="attr">class</span>=<span class="val">"chai-bg-[#1a1a1a] chai-text-[#ededed]
+  chai-border chai-border-[rgba(255,255,255,0.12)]
+  chai-px-5 chai-py-2 chai-rounded-md
+  chai-font-sm chai-font-medium
+  hover:chai-bg-gray-700"</span>&gt;
+  Settings
+&lt;/<span class="tag">button</span>&gt;</code></pre>
+
+                        <pre class="btn-code-block hidden" id="btn-code-ghost"><code>&lt;<span class="tag">button</span> <span class="attr">class</span>=<span class="val">"chai-text-[#888888]
+  chai-px-5 chai-py-2 chai-rounded-md
+  chai-font-sm chai-font-medium
+  hover:chai-bg-gray-800
+  hover:chai-text-white"</span>&gt;
+  Cancel
+&lt;/<span class="tag">button</span>&gt;</code></pre>
+
+                        <pre class="btn-code-block hidden" id="btn-code-danger"><code>&lt;<span class="tag">button</span> <span class="attr">class</span>=<span class="val">"chai-bg-red-600 chai-text-white
+  chai-px-5 chai-py-2 chai-rounded-md
+  chai-font-sm chai-font-medium
+  hover:chai-bg-red-700"</span>&gt;
+  Delete
+&lt;/<span class="tag">button</span>&gt;</code></pre>
+
+                        <pre class="btn-code-block hidden" id="btn-code-outline-danger"><code>&lt;<span class="tag">button</span> <span class="attr">class</span>=<span class="val">"chai-border chai-border-red-600
+  chai-text-red-400 chai-px-5 chai-py-2
+  chai-rounded-md chai-font-sm chai-font-medium
+  hover:chai-bg-red-700
+  hover:chai-text-white"</span>&gt;
+  Remove
+&lt;/<span class="tag">button</span>&gt;</code></pre>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="section">
+            <p class="section-title">Cards</p>
+            <div class="cards-grid">
+
+
+                <article class="comp-card">
+                    <div class="preview-pane">
+                        <p class="pane-label">Preview</p>
+                        <span class="comp-name">Profile Card</span>
+                        <div class="preview-area">
+                            <div
+                                class="chai-w-full chai-max-w-xs chai-border chai-border-gray-800 chai-rounded-2xl chai-overflow-hidden chai-flex chai-flex-col chai-bg-[#161616]">
+                                <div class="chai-h-20 chai-bg-blue-500 chai-rounded-t-2xl"></div>
+                                <div class="chai-p-4 chai-flex chai-flex-col chai-gap-3">
+                                    <div class="chai-flex chai-justify-between chai-items-center">
+                                        <div
+                                            class="chai-w-12 chai-h-12 chai-rounded-full chai-bg-gray-700 chai-border-4 chai-border-gray-900">
+                                        </div>
+                                        <button
+                                            class="chai-bg-white chai-text-gray-900 chai-rounded-full chai-px-4 chai-py-1 chai-font-xs chai-font-semibold chai-cursor-pointer hover:chai-bg-gray-200">Follow</button>
+                                    </div>
+                                    <div class="chai-flex chai-flex-col chai-gap-1">
+                                        <p class="chai-text-white chai-font-semibold chai-font-sm">Ariana Mills</p>
+                                        <p class="chai-text-gray-500 chai-font-sm">@ariana_builds</p>
+                                    </div>
+                                    <p class="chai-text-gray-400 chai-font-sm">Design systems, front-end craft, and
+                                        small UI experiments every week.</p>
+                                    <div class="chai-flex chai-gap-4 chai-text-gray-400 chai-font-sm">
+                                        <p><span class="chai-text-white chai-font-semibold">312</span> Following</p>
+                                        <p><span class="chai-text-white chai-font-semibold">12.4K</span> Followers</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="code-pane">
+                        <div class="code-pane-top">
+                            <p class="pane-label">Code</p>
+                            <button class="copy-btn" onclick="copyCode('code-profile-card', this)">Copy</button>
+                        </div>
+                        <pre><code class="language-markup" id="code-profile-card">&lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"chai-border chai-border-gray-800
+  chai-rounded-2xl chai-overflow-hidden
+  chai-flex chai-flex-col"</span>&gt;
+  &lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"chai-h-20 chai-bg-blue-500 chai-rounded-t-2xl"</span>&gt;&lt;/<span class="tag">div</span>&gt;
+  &lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"chai-p-4 chai-flex chai-flex-col chai-gap-3"</span>&gt;
+    &lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"chai-flex chai-items-end chai-justify-between"</span>&gt;
+      &lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"chai-w-16 chai-h-16 chai-rounded-full
+        chai-bg-gray-700 chai-border-4 chai-border-gray-900"</span>&gt;&lt;/<span class="tag">div</span>&gt;
+      &lt;<span class="tag">button</span> <span class="attr">class</span>=<span class="val">"chai-bg-white chai-text-gray-900
+        chai-rounded-full chai-px-4 chai-py-1
+        chai-font-sm chai-font-semibold
+        hover:chai-bg-gray-200"</span>&gt;Follow&lt;/<span class="tag">button</span>&gt;
+    &lt;/<span class="tag">div</span>&gt;
+    &lt;<span class="tag">p</span> <span class="attr">class</span>=<span class="val">"chai-text-white chai-font-semibold"</span>&gt;Ariana Mills&lt;/<span class="tag">p</span>&gt;
+    &lt;<span class="tag">p</span> <span class="attr">class</span>=<span class="val">"chai-text-gray-500"</span>&gt;@ariana_builds&lt;/<span class="tag">p</span>&gt;
+  &lt;/<span class="tag">div</span>&gt;
+&lt;/<span class="tag">div</span>&gt;</code></pre>
+                    </div>
+                </article>
+
+
+                <article class="comp-card">
+                    <div class="preview-pane">
+                        <p class="pane-label">Preview</p>
+                        <span class="comp-name">Pricing Card</span>
+                        <div class="preview-area">
+                            <div
+                                class="chai-w-full chai-max-w-xs chai-border chai-border-gray-700 chai-rounded-2xl chai-p-5 chai-flex chai-flex-col chai-gap-4 chai-bg-[#161616]">
+                                <div class="chai-flex chai-justify-between chai-items-center">
+                                    <p class="chai-text-gray-400 chai-font-sm">Starter Plan</p>
+                                    <span
+                                        class="chai-border chai-border-[rgba(255,255,255,0.1)] chai-text-[#888888] chai-rounded-full chai-px-2 chai-font-xs">Free</span>
+                                </div>
+                                <div>
+                                    <p class="chai-text-[#ededed] chai-font-4xl chai-font-semibold">$12<span
+                                            class="chai-text-[#666666] chai-font-base chai-font-normal">/mo</span></p>
+                                </div>
+                                <div class="chai-border-b chai-border-[rgba(255,255,255,0.06)]"></div>
+                                <div class="chai-flex chai-flex-col chai-gap-2 chai-font-sm">
+                                    <div class="chai-flex chai-gap-2 chai-items-center chai-text-gray-300">
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                            <path d="M2 7l3.5 3.5L12 3" stroke="#4ade80" stroke-width="1.8"
+                                                stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        3 Projects
+                                    </div>
+                                    <div class="chai-flex chai-gap-2 chai-items-center chai-text-gray-300">
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                            <path d="M2 7l3.5 3.5L12 3" stroke="#4ade80" stroke-width="1.8"
+                                                stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        Basic Analytics
+                                    </div>
+                                    <div class="chai-flex chai-gap-2 chai-items-center chai-text-gray-300">
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                            <path d="M2 7l3.5 3.5L12 3" stroke="#4ade80" stroke-width="1.8"
+                                                stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        Email Support
+                                    </div>
+                                </div>
+                                <button
+                                    class="chai-bg-white chai-text-gray-900 chai-rounded-lg chai-px-4 chai-py-2 chai-font-sm chai-font-medium chai-cursor-pointer hover:chai-bg-gray-100">Choose
+                                    Plan</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="code-pane">
+                        <div class="code-pane-top">
+                            <p class="pane-label">Code</p>
+                            <button class="copy-btn" onclick="copyCode('code-pricing-card', this)">Copy</button>
+                        </div>
+                        <pre><code class="language-markup" id="code-pricing-card">&lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"chai-border chai-border-gray-700
+  chai-rounded-2xl chai-p-5
+  chai-flex chai-flex-col chai-gap-4"</span>&gt;
+  &lt;<span class="tag">p</span> <span class="attr">class</span>=<span class="val">"chai-text-gray-400"</span>&gt;Starter Plan&lt;/<span class="tag">p</span>&gt;
+  &lt;<span class="tag">p</span>&gt;$12&lt;<span class="tag">span</span> <span class="attr">class</span>=<span class="val">"chai-text-gray-600"</span>&gt;/mo&lt;/<span class="tag">span</span>&gt;&lt;/<span class="tag">p</span>&gt;
+  &lt;<span class="tag">ul</span> <span class="attr">class</span>=<span class="val">"chai-flex chai-flex-col chai-gap-2"</span>&gt;
+    &lt;<span class="tag">li</span>&gt;3 Projects&lt;/<span class="tag">li</span>&gt;
+    &lt;<span class="tag">li</span>&gt;Basic Analytics&lt;/<span class="tag">li</span>&gt;
+    &lt;<span class="tag">li</span>&gt;Email Support&lt;/<span class="tag">li</span>&gt;
+  &lt;/<span class="tag">ul</span>&gt;
+  &lt;<span class="tag">button</span> <span class="attr">class</span>=<span class="val">"chai-bg-white chai-text-gray-900
+    chai-rounded-lg chai-px-4 chai-py-2
+    chai-font-medium hover:chai-bg-gray-100"</span>&gt;
+    Choose Plan
+  &lt;/<span class="tag">button</span>&gt;
+&lt;/<span class="tag">div</span>&gt;</code></pre>
+                    </div>
+                </article>
+
+                <article class="comp-card">
+                    <div class="preview-pane">
+                        <p class="pane-label">Preview</p>
+                        <span class="comp-name">Alert Card</span>
+                        <div class="preview-area">
+                            <div
+                                class="chai-w-full chai-max-w-xs chai-border chai-border-gray-800 chai-rounded-xl chai-p-4 chai-flex chai-justify-between chai-items-center chai-bg-[#161616]">
+                                <div class="chai-flex chai-gap-3 chai-items-center">
+                                    <div
+                                        class="chai-w-8 chai-h-8 chai-rounded-lg chai-flex chai-items-center chai-justify-center chai-bg-[rgba(59,130,246,0.12)]">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <circle cx="8" cy="8" r="7" stroke="#3b82f6" stroke-width="1.5" />
+                                            <path d="M8 5v3.5M8 11v.5" stroke="#3b82f6" stroke-width="1.5"
+                                                stroke-linecap="round" />
+                                        </svg>
+                                    </div>
+                                    <div class="chai-flex chai-flex-col chai-gap-1">
+                                        <p class="chai-text-white chai-font-medium chai-font-sm">Deployment complete</p>
+                                        <p class="chai-text-gray-500 chai-font-xs">Your project is live at meawwind.dev
+                                        </p>
+                                    </div>
+                                </div>
+                                <button class="chai-text-gray-500 chai-cursor-pointer chai-px-1 chai-rounded-md">
+                                    <svg width="10" height="10" viewBox="0 0 14 14" fill="none">
+                                        <path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="code-pane">
+                        <div class="code-pane-top">
+                            <p class="pane-label">Code</p>
+                            <button class="copy-btn" onclick="copyCode('code-alert-card', this)">Copy</button>
+                        </div>
+                        <pre><code class="language-markup" id="code-alert-card">&lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"chai-border chai-border-gray-800
+  chai-rounded-xl chai-p-4
+  chai-flex chai-gap-3 chai-items-center"</span>&gt;
+  &lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"chai-w-8 chai-h-8 chai-rounded-lg
+    chai-flex chai-items-center chai-justify-center"</span>&gt;
+    &lt;!-- icon --&gt;
+  &lt;/<span class="tag">div</span>&gt;
+  &lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"chai-flex chai-flex-col chai-gap-1"</span>&gt;
+    &lt;<span class="tag">p</span> <span class="attr">class</span>=<span class="val">"chai-text-white chai-font-medium"</span>&gt;
+      Deployment complete
+    &lt;/<span class="tag">p</span>&gt;
+    &lt;<span class="tag">p</span> <span class="attr">class</span>=<span class="val">"chai-text-gray-500"</span>&gt;
+      Your project is live at meawwind.dev
+    &lt;/<span class="tag">p</span>&gt;
+  &lt;/<span class="tag">div</span>&gt;
+&lt;/<span class="tag">div</span>&gt;</code></pre>
+                    </div>
+                </article>
+
+
+                <article class="comp-card">
+                    <div class="preview-pane">
+                        <p class="pane-label">Preview</p>
+                        <span class="comp-name">Stat Card</span>
+                        <div class="preview-area">
+                            <div
+                                class="chai-w-full chai-max-w-xs chai-border chai-border-gray-800 chai-rounded-xl chai-p-5 chai-flex chai-flex-col chai-gap-3 chai-bg-[#161616]">
+                                <div class="chai-flex chai-justify-between chai-items-center">
+                                    <p class="chai-text-gray-500 chai-font-xs">TOTAL DEPLOYS</p>
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                        <path d="M7 1v6M4 4l3-3 3 3M2 10h10M2 13h10" stroke="#555" stroke-width="1.4"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <p class="chai-text-[#ededed] chai-font-5xl chai-font-semibold">2,847</p>
+                                <div class="chai-flex chai-items-center chai-gap-2">
+                                    <span
+                                        class="chai-text-green-400 chai-font-xs chai-inline-flex chai-items-center chai-gap-1">
+                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                            <path d="M6 9V3M3 6l3-3 3 3" stroke="#4ade80" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        +12.4%
+                                    </span>
+                                    <p class="chai-text-gray-600 chai-font-xs">vs last month</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="code-pane">
+                        <div class="code-pane-top">
+                            <p class="pane-label">Code</p>
+                            <button class="copy-btn" onclick="copyCode('code-stat-card', this)">Copy</button>
+                        </div>
+                        <pre><code class="language-markup" id="code-stat-card">&lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"chai-border chai-border-gray-800
+  chai-rounded-xl chai-p-5
+  chai-flex chai-flex-col chai-gap-3"</span>&gt;
+  &lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"chai-flex chai-justify-between chai-items-center"</span>&gt;
+    &lt;<span class="tag">p</span> <span class="attr">class</span>=<span class="val">"chai-text-gray-500"</span>&gt;Total Deploys&lt;/<span class="tag">p</span>&gt;
+    &lt;!-- icon --&gt;
+  &lt;/<span class="tag">div</span>&gt;
+  &lt;<span class="tag">p</span>&gt;2,847&lt;/<span class="tag">p</span>&gt;
+  &lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="val">"chai-flex chai-items-center chai-gap-2"</span>&gt;
+    &lt;<span class="tag">span</span> <span class="attr">class</span>=<span class="val">"chai-text-green-400"</span>&gt;+12.4%&lt;/<span class="tag">span</span>&gt;
+    &lt;<span class="tag">p</span> <span class="attr">class</span>=<span class="val">"chai-text-gray-600"</span>&gt;vs last month&lt;/<span class="tag">p</span>&gt;
+  &lt;/<span class="tag">div</span>&gt;
+&lt;/<span class="tag">div</span>&gt;</code></pre>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script type="module">
+        import "./dist/index.js";
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script>
+        function copyCode(codeId, button) {
+            const codeElement = document.getElementById(codeId);
+            if (!codeElement) return;
+            navigator.clipboard.writeText(codeElement.innerText).then(() => {
+                button.textContent = "Copied!";
+                button.classList.add("copied");
+                setTimeout(() => { button.textContent = "Copy"; button.classList.remove("copied"); }, 1400);
+            });
+        }
+
+        let _activeBtnTab = 'primary';
+
+        function switchBtnTab(tabEl, id) {
+            tabEl.closest('.btn-tabs').querySelectorAll('.btn-tab').forEach(t => t.classList.remove('active'));
+            tabEl.classList.add('active');
+            document.querySelectorAll('.btn-panel').forEach(p => p.classList.add('hidden'));
+            document.querySelectorAll('.btn-code-block').forEach(b => b.classList.add('hidden'));
+            document.getElementById('btn-preview-' + id).classList.remove('hidden');
+            document.getElementById('btn-code-' + id).classList.remove('hidden');
+            _activeBtnTab = id;
+        }
+
+        function copyActiveBtnCode(button) {
+            const block = document.getElementById('btn-code-' + _activeBtnTab);
+            if (!block) return;
+            navigator.clipboard.writeText(block.innerText).then(() => {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(() => { button.textContent = 'Copy'; button.classList.remove('copied'); }, 1400);
+            });
+        }
+    </script>
+</body>
+
+</html>
