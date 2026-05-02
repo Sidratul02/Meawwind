@@ -13,7 +13,8 @@
   },
   "files": [
     "dist",
-    "README.MD"
+    "README.md",
+    "LICENSE"
   ],
   "sideEffects": false,
   "type": "module",
@@ -41,8 +42,5 @@
   "bugs": {
     "url": "https://github.com/Sidratul02/Meawwind/issues"
   },
-  "homepage": "https://github.com/Sidratul02/Meawwind#readme",
-  "dependencies": {
-    "meawwind": "^1.2.0"
-  }
+  "homepage": "https://github.com/Sidratul02/Meawwind#readme"
 }

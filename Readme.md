@@ -134,3 +134,9 @@ npx serve docs
 ## Publishing
 
 Running `npm publish` automatically triggers `prepublishOnly`, which runs a fresh production build. Only the files listed in the `files` field of `package.json` are included in the published package (`dist/` and `README.md`).
+
+---
+
+## License
+
+MIT © [Sidratul Muntaha](https://github.com/Sidratul02)
