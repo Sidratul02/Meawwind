@@ -1,4 +1,4 @@
-import { applyBgColor, applyTextColor } from "../properties/colors.js";
+import { applyBgColor, applyTextColor } from "../properties/color.js";
 import { applyMargin, applyPadding, applyGap } from "../properties/spacing.js";
 import {
   applyBorder,

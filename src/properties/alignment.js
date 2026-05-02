@@ -1,4 +1,4 @@
-import { alignmentMappingValues } from "../constants/alignment.js";
+import { alignmentMappingValues } from "../constants/alignments.js";
 
 const determineProperty = (key) => {
   if (key.startsWith("text-")) {
